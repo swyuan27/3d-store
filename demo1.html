@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset=UTF-8 />
+    <link rel="stylesheet" href="main.css">
+  </head>
+  <body>
+      <div>
+        
+        <button id="Soda" >Soda</button>
+        <button id="Cup" >Cup</button>
+        <button id="Carton" >Carton</button>
+      </div>
+    
+    <script type="module">
+        import * as THREE from "https://threejs.org/build/three.module.js";
+        import { OrbitControls } from "https://threejs.org/examples/jsm/controls/OrbitControls.js";
+        import { GLTFLoader } from "https://threejs.org/examples/jsm/loaders/GLTFLoader.js";
+      let scene, camera, renderer;
+      let Positions=[];
+      function init() {
+        
+        scene = new THREE.Scene();
+        camera = new THREE.PerspectiveCamera(55,window.innerWidth/window.innerHeight,45,30000);
+        camera.position.set(-1000,700,-1100);
+        
+        renderer = new THREE.WebGLRenderer({antialias:true});
+        renderer.setSize(window.innerWidth,window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+        
+        let controls = new OrbitControls(camera,renderer.domElement);
+        controls.addEventListener('change', renderer);
+        
+        let loader = new GLTFLoader();
+        loader.load('Room1/scene.gltf',function(gltf){
+            let room = gltf.scene.children[0];
+            room.scale.set(500,500,500);
+            room.position.y-=300;
+            scene.add(gltf.scene);
+            renderer.render(scene,camera);
+        });
+
+        let loader2 = new GLTFLoader();
+        
+        loader2.load('Cup/scene.gltf',function(gltf){
+            let Cup = gltf.scene.children[0];
+            Cup.scale.set(500,500,500);
+            Cup.position.y-=300;
+            Cup.position.x-=2000;
+            Cup.name = "Cup";
+            scene.add(gltf.scene);
+            renderer.render(scene,camera);
+            Positions.push(Cup);
+        });
+
+        let loader3 = new GLTFLoader();
+        loader3.load('Soda/scene.gltf',function(gltf){
+            let Soda = gltf.scene.children[0];
+            Soda.scale.set(200,200,200);
+            Soda.position.y+=100;
+            Soda.position.x+=3000;
+            Soda.position.z+=3000;
+            Soda.name="Soda";
+            scene.add(gltf.scene);
+            renderer.render(scene,camera);
+            Positions.push(Soda);
+        });
+
+        let loader4 = new GLTFLoader();
+        loader4.load('Carton/scene.gltf',function(gltf){
+            let Carton = gltf.scene.children[0];
+            Carton.scale.set(30,30,30);
+            Carton.position.y-=300;
+            Carton.position.x-=3000;
+            Carton.position.z-=3000;
+            Carton.name="Carton";
+            scene.add(gltf.scene);
+            renderer.render(scene,camera);
+            Positions.push(Carton);
+        });
+
+        /*
+        let directionalLight = new THREE.DirectionalLight(0xffffff,100);
+        directionalLight.position.set(0,1,0);
+        directionalLight.castShadow = true;
+        scene.add(directionalLight);
+        */
+        let hlight = new THREE.AmbientLight (0x404040,10);
+        scene.add(hlight);
+        var axesHelper = new THREE.AxesHelper( 5 );
+        scene.add( axesHelper );
+        //let room = gltf.scene.children[0];
+        //let RoomX = room.position.x;
+       // let RoomY = room.position.y;
+        //let RoomZ = room.position.z;
+        
+        animate();
+      }
+      
+      function animate() {
+        renderer.render(scene,camera);
+        requestAnimationFrame(animate);
+        
+        //camera.rotation.x+=0.01;
+      }
+        var raycaster = new THREE.Raycaster();
+        var mouse = new THREE.Vector2();
+        
+      function mySoda(){
+        //camera.position.x+=5000;
+          //camera.position.z+=3000;
+        window.open("Soda.html");
+      }
+      function myCup(){
+        window.open("Cup.html");
+          //camera.position.x-=1800;
+      }
+      function myCarton(){
+        window.open("Carton.html");
+          //camera.position.x-=4000;
+          //camera.position.z-=3000;
+      }
+
+      document.getElementById("Soda").addEventListener("click",mySoda,false);
+      document.getElementById("Cup").addEventListener("click",myCup,false);
+      document.getElementById("Carton").addEventListener("click",myCarton,false);
+      
+      /*
+      function onMouseClick(event){
+        event.preventDefault();
+        mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+        mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+        var intersects = raycaster.intersectObjects(scene.children,true);
+        for(var i=0; i<intersects.length;++i){
+            console.log(intersects);
+            for(var j=0; j<Positions.length;++j){
+            if(Math.abs(intersects[i].object.position.x-Positions[j].position.x)<2500&&Math.abs(intersects[i].object.position.y-Positions[j].position.y)<2500&&Math.abs(intersects[i].object.position.z-Positions[j].position.z)<2500){
+            alert("Clicked on Something");
+            }
+            }
+        }
+      }
+      window.addEventListener('click',onMouseClick);
+      */
+      init();
+      //console.log(Positions);
+    </script>
+  </body>
+</html>
